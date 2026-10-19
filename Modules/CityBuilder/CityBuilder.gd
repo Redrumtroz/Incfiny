@@ -5,7 +5,6 @@ extends Control
 @onready var left_panel = $MainVBox/WorkspaceSplit/LeftPanel
 @onready var resource_list = $MainVBox/WorkspaceSplit/LeftPanel/ResourceList
 @onready var city_map = $MainVBox/WorkspaceSplit/RightWorkspace/CityMap
-@onready var build_menu_scroll = $MainVBox/WorkspaceSplit/RightWorkspace/BuildMenuScroll
 @onready var build_list = $MainVBox/WorkspaceSplit/RightWorkspace/BuildMenuScroll/BuildList
 
 var ui: CityUI
@@ -34,7 +33,7 @@ func _ready() -> void:
 	# 3. INITIALISATION DE L'INTERFACE (UI)
 	ui = CityUI.new()
 	add_child(ui)
-	ui.setup(top_menu_bar, resource_list, city_map, build_menu_scroll, build_list)
+	ui.setup(top_menu_bar, resource_list, city_map)
 	
 	ui.building_tool_selected.connect(func(b_id):
 		selected_building_tool = b_id

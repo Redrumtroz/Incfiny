@@ -6,26 +6,39 @@ signal toggle_resource_panel_requested()
 signal building_destroyed(b_id: String, building_node: Control)
 
 var resource_labels = {}
-var building_buttons = {}
 var stat_pop_label : Label
 var stat_bld_label : Label
 
 var popup: GenericPopUp
+var toolbar: GenericToolbar
 
 var resource_names = {
 	"RES_GOLD": "Or", "MAT_WOOD": "Bois", "MAT_STONE": "Pierre", 
 	"MAT_WATER": "Eau", "MAT_PLANK": "Planches", "MAT_CEMENT": "Ciment"
 }
 
-func setup(top_menu: Control, res_list: Control, map_node: Control, b_scroll: Control, b_list: Control) -> void:
+# --- ON A SUPPRIMÉ LES ARGUMENTS INUTILES ICI ---
+func setup(top_menu: Control, res_list: Control, map_node: Control) -> void:
 	_setup_stats_overlay(map_node)
 	_setup_top_bar(top_menu)
 	_generate_resource_ui(res_list)
-	_generate_build_menu(b_scroll, b_list)
 	
-	# Initialisation du PopUp générique
 	popup = GenericPopUp.new()
 	map_node.add_child(popup)
+	
+	# --- CRÉATION DE LA TOOLBAR GÉNÉRIQUE ---
+	toolbar = GenericToolbar.new()
+	map_node.add_child(toolbar)
+	toolbar.setup({
+		"placement": "bottom", # Essaie "left", "right", ou "top" plus tard !
+		"bg_color": Color(0.12, 0.13, 0.15, 0.20), # Fond gris très foncé, transparent à 85%
+		"padding": 12,
+		"spacing": 8,
+		"scroll_size": 650
+	})
+	
+	toolbar.tool_selected.connect(func(t_id): building_tool_selected.emit(t_id))
+	_generate_build_menu()
 
 func _setup_stats_overlay(map_node: Control) -> void:
 	var stats_panel = PanelContainer.new()
@@ -91,48 +104,20 @@ func _generate_resource_ui(res_list: Control) -> void:
 		res_list.add_child(lbl)
 		resource_labels[res_id] = lbl
 
-func _generate_build_menu(b_scroll: Control, b_list: Control) -> void:
-	b_scroll.custom_minimum_size.y = 120 
-	
+func _generate_build_menu() -> void:
 	for b_id in EconomyManager.buildings_data.keys():
 		var b_data = EconomyManager.buildings_data[b_id]
-		var btn = Button.new()
-		btn.custom_minimum_size = Vector2(100, 100)
-		btn.toggle_mode = true
-		
-		var vbox = VBoxContainer.new()
-		vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-		vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-		
 		var ui_data = b_data.get("ui", {})
-		var icon_lbl = Label.new()
-		icon_lbl.text = ui_data.get("icon", "🏗️")
-		icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		icon_lbl.add_theme_font_size_override("font_size", 32)
 		
-		var name_lbl = Label.new()
-		name_lbl.text = b_data.get("name", "Bâtiment")
-		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		name_lbl.add_theme_font_size_override("font_size", 12)
-		
-		vbox.add_child(icon_lbl)
-		vbox.add_child(name_lbl)
-		btn.add_child(vbox)
-		
-		btn.pressed.connect(func(): 
-			_select_building_tool(b_id, btn)
-			building_tool_selected.emit(b_id if btn.button_pressed else "")
+		# On utilise la nouvelle fonction add_tool de GenericToolbar
+		var btn = toolbar.add_tool(
+			b_id, 
+			b_data.get("name", "Bâtiment"), 
+			ui_data.get("icon", "🏗️")
 		)
+		
 		btn.mouse_entered.connect(func(): show_build_tooltip(b_id))
 		btn.mouse_exited.connect(func(): TooltipManager.hide_tooltip())
-		
-		b_list.add_child(btn)
-		building_buttons[b_id] = btn
-
-func _select_building_tool(_b_id: String, active_btn: Button) -> void:
-	for key in building_buttons:
-		if building_buttons[key] != active_btn:
-			building_buttons[key].button_pressed = false
 
 func show_build_tooltip(b_id: String) -> void:
 	var b_data = EconomyManager.buildings_data[b_id]
@@ -201,14 +186,15 @@ func update_ui(placed_buildings_count: int) -> void:
 
 	for b_id in EconomyManager.buildings_data.keys():
 		var b_data = EconomyManager.buildings_data[b_id]
-		var btn = building_buttons[b_id]
+		var btn = toolbar.get_tool(b_id)
+		if not btn: continue
+		
 		var current_cost = calculate_current_cost(b_data)
 		
 		if not EconomyManager.can_afford(current_cost):
 			btn.modulate = Color(1, 1, 1, 0.5)
 			if btn.button_pressed:
-				btn.button_pressed = false
-				building_tool_selected.emit("")
+				toolbar.deselect_all()
 		else:
 			btn.modulate = Color(1, 1, 1, 1.0)
 
