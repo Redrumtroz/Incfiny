@@ -1,0 +1,34 @@
+{
+  "seed_wheat": {
+	"name": "Graine de Blé",
+	"tag": "Cereal",
+	"cost": { "RES_GOLD": 10.0 },
+	"grow_time_seconds": 10.0,
+	"harvest_yield": { "FARM_WHEAT": 1.0 },
+	"synergy_targets": ["seed_corn"]
+  },
+  "seed_corn": {
+	"name": "Graine de Maïs",
+	"tag": "Cereal",
+	"cost": { "RES_GOLD": 15.0 },
+	"grow_time_seconds": 15.0,
+	"harvest_yield": { "FARM_CORN": 1.0 },
+	"synergy_targets": ["seed_wheat"]
+  },
+  "seed_mandrake": {
+	"name": "Racine de Mandragore",
+	"tag": "Herb",
+	"cost": { "RES_GOLD": 100.0 },
+	"grow_time_seconds": 45.0,
+	"harvest_yield": { "FARM_HERB": 1.0 },
+	"synergy_targets": []
+  },
+  "animal_cow": {
+	"name": "Vache Laitière",
+	"tag": "Animal",
+	"cost": { "RES_GOLD": 1500.0 },
+	"grow_time_seconds": 120.0,
+	"harvest_yield": { "FARM_ANIMAL": 1.0 },
+	"synergy_targets": ["seed_wheat"]
+  }
+}

@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://jf8i8m356pjx"]
+
+[ext_resource type="Script" uid="uid://fqwgns4yn40t" path="res://Modules/CityBuilder/CityBuilder.gd" id="1_u2s3q"]
+
+[node name="Main" type="Control" unique_id=1428670325]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u2s3q")
+
+[node name="UI_Split" type="HBoxContainer" parent="." unique_id=83187317]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="LeftPanel" type="Panel" parent="UI_Split" unique_id=1758025283]
+propagate_maximum_size = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResourceList" type="VBoxContainer" parent="UI_Split/LeftPanel" unique_id=1840950899]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="RightPanel" type="Panel" parent="UI_Split" unique_id=2064888749]
+propagate_maximum_size = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BuildingList" type="VBoxContainer" parent="UI_Split/RightPanel" unique_id=436070350]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 34.0
+offset_right = 43.0
+offset_bottom = 74.0
+
+[node name="BtnManualWood" type="Button" parent="UI_Split/RightPanel" unique_id=211828481]
+modulate = Color(0.99285406, 0.8351335, 0.8378184, 1)
+self_modulate = Color(0.26429597, 0.56703174, 0.38170296, 1)
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+scale = Vector2(9.039999, 2.999999)
