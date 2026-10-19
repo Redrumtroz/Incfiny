@@ -3,11 +3,14 @@ class_name CityUI
 
 signal building_tool_selected(b_id: String)
 signal toggle_resource_panel_requested()
+signal building_destroyed(b_id: String, building_node: Control)
 
 var resource_labels = {}
 var building_buttons = {}
 var stat_pop_label : Label
 var stat_bld_label : Label
+
+var popup: GenericPopUp
 
 var resource_names = {
 	"RES_GOLD": "Or", "MAT_WOOD": "Bois", "MAT_STONE": "Pierre", 
@@ -19,6 +22,10 @@ func setup(top_menu: Control, res_list: Control, map_node: Control, b_scroll: Co
 	_setup_top_bar(top_menu)
 	_generate_resource_ui(res_list)
 	_generate_build_menu(b_scroll, b_list)
+	
+	# Initialisation du PopUp générique
+	popup = GenericPopUp.new()
+	map_node.add_child(popup)
 
 func _setup_stats_overlay(map_node: Control) -> void:
 	var stats_panel = PanelContainer.new()
@@ -150,6 +157,33 @@ func show_build_tooltip(b_id: String) -> void:
 			text += "[color=#ffaa00]- " + str(b_data["consumption"][res_id]) + " " + resource_names.get(res_id, res_id) + "[/color]\n"
 	
 	TooltipManager.show_tooltip(text)
+
+func open_building_popup(b_id: String, building_node: Control) -> void:
+	var b_data = EconomyManager.buildings_data[b_id]
+	var b_name = b_data.get("name", "Bâtiment")
+	
+	TooltipManager.hide_tooltip()
+	popup.open("Gérer : " + b_name)
+	
+	var info_lbl = Label.new()
+	info_lbl.text = "Ce bâtiment participe à l'économie de la ville.\n"
+	if b_data.has("production"):
+		info_lbl.text += "Statut : Actif 🟢"
+	popup.add_element(info_lbl)
+	
+	var btn_upgrade = Button.new()
+	btn_upgrade.text = "Améliorer (Bientôt)"
+	btn_upgrade.disabled = true
+	popup.add_element(btn_upgrade)
+	
+	var btn_destroy = Button.new()
+	btn_destroy.text = "Détruire (Irréversible)"
+	btn_destroy.add_theme_color_override("font_color", Color("#ff5555"))
+	btn_destroy.pressed.connect(func():
+		building_destroyed.emit(b_id, building_node)
+		popup.close()
+	)
+	popup.add_element(btn_destroy)
 
 func update_ui(placed_buildings_count: int) -> void:
 	stat_bld_label.text = str(placed_buildings_count)

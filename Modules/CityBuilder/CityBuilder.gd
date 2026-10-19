@@ -44,6 +44,7 @@ func _ready() -> void:
 		is_resource_panel_open = !is_resource_panel_open
 		left_panel.visible = is_resource_panel_open
 	)
+	ui.building_destroyed.connect(_on_building_destroyed)
 	
 	# 4. INITIALISATION DE L'APPARITION DES ARBRES
 	spawner = ResourceSpawner.new()
@@ -53,6 +54,9 @@ func _ready() -> void:
 	# Branchement des signaux de l'économie
 	SignalBus.resources_updated.connect(_on_resources_updated)
 	_on_resources_updated()
+
+func _process(_delta: float) -> void:
+	pass
 
 func _on_resources_updated() -> void:
 	ui.update_ui(placed_buildings_count)
@@ -99,5 +103,18 @@ func _spawn_building_visual(b_id: String, pos: Vector2) -> void:
 	)
 	building.mouse_exited.connect(func(): TooltipManager.hide_tooltip())
 	
-	# LA CORRECTION EST ICI : On l'ajoute au map_content !
+	building.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			if selected_building_tool == "":
+				building.accept_event()
+				ui.open_building_popup(b_id, building)
+	)
+	
 	map_content.add_child(building)
+
+func _on_building_destroyed(b_id: String, building_node: Control) -> void:
+	building_node.queue_free()
+	var b_data = EconomyManager.buildings_data[b_id]
+	b_data["owned"] = max(0, b_data.get("owned", 1) - 1)
+	placed_buildings_count -= 1
+	_on_resources_updated()
