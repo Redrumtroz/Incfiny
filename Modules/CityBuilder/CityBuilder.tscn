@@ -61,9 +61,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TopMenuBar" type="HBoxContainer" parent="MainVBox" unique_id=246215945]
-layout_mode = 2
-
 [node name="WorkspaceSplit" type="HSplitContainer" parent="MainVBox" unique_id=492204223]
 layout_mode = 2
 size_flags_vertical = 3

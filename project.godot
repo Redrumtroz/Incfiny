@@ -20,7 +20,6 @@ SignalBus="*uid://vl5pvmpqmqkr"
 EconomyManager="*uid://bx3pn8agp7dvx"
 FarmManager="*uid://3whc53g1b5mt"
 MetaManager="*uid://b6l7eghmd705m"
-ScreenManager="*uid://cwek3rpc432ry"
 TooltipManager="*uid://cobqv8fpok3l3"
 
 [display]

@@ -83,6 +83,10 @@ func add_resource(res_id: String, amount: float) -> void:
 		SignalBus.resource_gained.emit(res_id, amount)
 	elif amount < 0:
 		SignalBus.resource_spent.emit(res_id, abs(amount))
+		
+	# --- LA LIGNE MAGIQUE EST ICI ---
+	# On force l'UI à se rafraîchir à chaque modification de l'inventaire
+	SignalBus.resources_updated.emit()
 
 func get_resource(res_id: String) -> float:
 	return float(inventory.get(res_id, 0.0))

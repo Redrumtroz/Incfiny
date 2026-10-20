@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://dhrjgdodtih1a"]
+
+[ext_resource type="Script" uid="uid://cwek3rpc432ry" path="res://Main.gd" id="1_r0du0"]
+[ext_resource type="Script" uid="uid://bb63cwhq2hp2m" path="res://Core/UI_Components/GenericToolbar.gd" id="1_uu6xs"]
+[ext_resource type="Script" uid="uid://bpjal4h3w1ou3" path="res://Core/UI_Components/GenericPopUp.gd" id="2_r0du0"]
+
+[node name="Main" type="Node2D" unique_id=1205134143]
+script = ExtResource("1_r0du0")
+
+[node name="WorldContainer" type="Control" parent="." unique_id=8913483]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=2122365614]
+
+[node name="GenericToolbar" type="PanelContainer" parent="UILayer" unique_id=1774533567]
+custom_minimum_size = Vector2(0, 80)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -80.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("1_uu6xs")
+
+[node name="GenericPopUp" type="Control" parent="UILayer" unique_id=1562374701]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 20.0
+offset_right = 89.0
+offset_bottom = 323.0
+script = ExtResource("2_r0du0")
+
+[node name="TopMenu" type="HBoxContainer" parent="UILayer" unique_id=2025347063]
+custom_minimum_size = Vector2(30, 0)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 26.0
+grow_horizontal = 2
+theme_override_constants/separation = 10

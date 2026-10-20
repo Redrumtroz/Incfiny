@@ -1,10 +1,12 @@
 extends Node
 class_name CityUI
 
+# --- LES SIGNAUX MANQUANTS SONT LÀ ---
 signal building_tool_selected(b_id: String)
 signal toggle_resource_panel_requested()
 signal building_destroyed(b_id: String, building_node: Control)
 
+# --- TES VARIABLES ---
 var resource_labels = {}
 var stat_pop_label : Label
 var stat_bld_label : Label
@@ -12,33 +14,32 @@ var stat_bld_label : Label
 var popup: GenericPopUp
 var toolbar: GenericToolbar
 
+var is_initialized: bool = false
+
 var resource_names = {
 	"RES_GOLD": "Or", "MAT_WOOD": "Bois", "MAT_STONE": "Pierre", 
 	"MAT_WATER": "Eau", "MAT_PLANK": "Planches", "MAT_CEMENT": "Ciment"
 }
 
-# --- ON A SUPPRIMÉ LES ARGUMENTS INUTILES ICI ---
-func setup(top_menu: Control, res_list: Control, map_node: Control) -> void:
-	_setup_stats_overlay(map_node)
-	_setup_top_bar(top_menu)
-	_generate_resource_ui(res_list)
+func setup(main_toolbar: GenericToolbar, main_popup: GenericPopUp, res_list: Control, map_node: Control) -> void:
+	toolbar = main_toolbar
+	popup = main_popup
 	
-	popup = GenericPopUp.new()
-	map_node.add_child(popup)
+	# 1. CRÉATION LOCALE (Une seule fois !)
+	if not is_initialized:
+		_setup_stats_overlay(map_node)
+		_generate_resource_ui(res_list)
+		is_initialized = true
 	
-	# --- CRÉATION DE LA TOOLBAR GÉNÉRIQUE ---
-	toolbar = GenericToolbar.new()
-	map_node.add_child(toolbar)
-	toolbar.setup({
-		"placement": "bottom", # Essaie "left", "right", ou "top" plus tard !
-		"bg_color": Color(0.12, 0.13, 0.15, 0.20), # Fond gris très foncé, transparent à 85%
-		"padding": 12,
-		"spacing": 8,
-		"scroll_size": 650
-	})
-	
-	toolbar.tool_selected.connect(func(t_id): building_tool_selected.emit(t_id))
+	# 2. ABONNEMENT AU SIGNAL (Sécurisé)
+	if not toolbar.tool_selected.is_connected(_on_tool_selected):
+		toolbar.tool_selected.connect(_on_tool_selected)
+		
+	# 3. RECONSTRUCTION DES OUTILS (À chaque fois qu'on ouvre la ville)
 	_generate_build_menu()
+
+func _on_tool_selected(t_id: String) -> void:
+	building_tool_selected.emit(t_id)
 
 func _setup_stats_overlay(map_node: Control) -> void:
 	var stats_panel = PanelContainer.new()
@@ -80,21 +81,6 @@ func _setup_stats_overlay(map_node: Control) -> void:
 	stats_panel.add_child(margin)
 	map_node.add_child(stats_panel)
 
-func _setup_top_bar(top_menu: Control) -> void:
-	var btn_toggle_res = Button.new()
-	btn_toggle_res.text = "📦 Ressources"
-	btn_toggle_res.pressed.connect(func(): toggle_resource_panel_requested.emit())
-	top_menu.add_child(btn_toggle_res)
-	
-	top_menu.add_child(VSeparator.new())
-	
-	var modules = {"🚜 Aller à la Ferme": "res://Modules/Farm/Farm.tscn"}
-	for mod_name in modules.keys():
-		var btn = Button.new()
-		btn.text = mod_name
-		btn.pressed.connect(func(): ScreenManager.open_module(modules[mod_name]))
-		top_menu.add_child(btn)
-
 func _generate_resource_ui(res_list: Control) -> void:
 	for res_id in EconomyManager.inventory.keys():
 		var lbl = Label.new()
@@ -109,57 +95,24 @@ func _generate_build_menu() -> void:
 		var b_data = EconomyManager.buildings_data[b_id]
 		var ui_data = b_data.get("ui", {})
 		
-		# On utilise la nouvelle fonction add_tool de GenericToolbar
-		var btn = toolbar.add_tool(
-			b_id, 
-			b_data.get("name", "Bâtiment"), 
-			ui_data.get("icon", "🏗️")
-		)
-		
+		var btn = toolbar.add_tool(b_id, b_data.get("name", "Bâtiment"), ui_data.get("icon", "🏗️"))
 		btn.mouse_entered.connect(func(): show_build_tooltip(b_id))
 		btn.mouse_exited.connect(func(): TooltipManager.hide_tooltip())
 
 func show_build_tooltip(b_id: String) -> void:
 	var b_data = EconomyManager.buildings_data[b_id]
 	var current_cost = calculate_current_cost(b_data)
-	
 	var text = "[b]" + b_data.get("name", "Bâtiment") + "[/b] (Possédés: " + str(b_data.get("owned", 0)) + ")\n"
-	text += "[color=#aaaaaa]" + b_data.get("description", "Un bâtiment utile.") + "[/color]\n\n"
-	text += "Coût de construction :\n"
-	
+	text += "[color=#aaaaaa]" + b_data.get("description", "Un bâtiment utile.") + "[/color]\n\nCoût :\n"
 	for res_id in current_cost.keys():
 		var color = "#ff5555" if EconomyManager.get_resource(res_id) < current_cost[res_id] else "#55ff55"
 		text += "[color=" + color + "]- " + str(current_cost[res_id]) + " " + resource_names.get(res_id, res_id) + "[/color]\n"
-	
-	if b_data.has("production") and b_data["production"].size() > 0:
-		text += "\nProduit par seconde :\n"
-		for res_id in b_data["production"].keys():
-			text += "[color=#55ffff]+ " + str(b_data["production"][res_id]) + " " + resource_names.get(res_id, res_id) + "[/color]\n"
-			
-	if b_data.has("consumption") and b_data["consumption"].size() > 0:
-		text += "\nConsomme par seconde :\n"
-		for res_id in b_data["consumption"].keys():
-			text += "[color=#ffaa00]- " + str(b_data["consumption"][res_id]) + " " + resource_names.get(res_id, res_id) + "[/color]\n"
-	
 	TooltipManager.show_tooltip(text)
 
 func open_building_popup(b_id: String, building_node: Control) -> void:
 	var b_data = EconomyManager.buildings_data[b_id]
-	var b_name = b_data.get("name", "Bâtiment")
-	
 	TooltipManager.hide_tooltip()
-	popup.open("Gérer : " + b_name)
-	
-	var info_lbl = Label.new()
-	info_lbl.text = "Ce bâtiment participe à l'économie de la ville.\n"
-	if b_data.has("production"):
-		info_lbl.text += "Statut : Actif 🟢"
-	popup.add_element(info_lbl)
-	
-	var btn_upgrade = Button.new()
-	btn_upgrade.text = "Améliorer (Bientôt)"
-	btn_upgrade.disabled = true
-	popup.add_element(btn_upgrade)
+	popup.open("Gérer : " + b_data.get("name", "Bâtiment"))
 	
 	var btn_destroy = Button.new()
 	btn_destroy.text = "Détruire (Irréversible)"
@@ -175,7 +128,6 @@ func update_ui(placed_buildings_count: int) -> void:
 	stat_pop_label.text = str(placed_buildings_count * 4)
 	
 	var net_prod = EconomyManager.get_net_production()
-	
 	for res_id in resource_labels.keys():
 		var amount = EconomyManager.get_resource(res_id)
 		var prod_sec = net_prod.get(res_id, 0.0)
@@ -185,16 +137,12 @@ func update_ui(placed_buildings_count: int) -> void:
 		resource_labels[res_id].text = text
 
 	for b_id in EconomyManager.buildings_data.keys():
-		var b_data = EconomyManager.buildings_data[b_id]
 		var btn = toolbar.get_tool(b_id)
 		if not btn: continue
-		
-		var current_cost = calculate_current_cost(b_data)
-		
+		var current_cost = calculate_current_cost(EconomyManager.buildings_data[b_id])
 		if not EconomyManager.can_afford(current_cost):
 			btn.modulate = Color(1, 1, 1, 0.5)
-			if btn.button_pressed:
-				toolbar.deselect_all()
+			if btn.button_pressed: toolbar.deselect_all()
 		else:
 			btn.modulate = Color(1, 1, 1, 1.0)
 

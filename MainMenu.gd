@@ -39,4 +39,4 @@ func _ready() -> void:
 func _on_start_game() -> void:
 	# On utilise la fonction classique de Godot car on détruit le menu principal 
 	# pour lancer la boucle de jeu principale.
-	get_tree().change_scene_to_file("res://Modules/CityBuilder/CityBuilder.tscn")
+	get_tree().change_scene_to_file("res://Main.tscn")

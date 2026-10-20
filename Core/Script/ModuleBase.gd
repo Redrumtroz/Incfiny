@@ -14,7 +14,6 @@ func setup_generic_module_ui() -> void:
 	btn_back.text = "🏠 Retour à la Ville"
 	btn_back.custom_minimum_size = Vector2(200, 50)
 	
-	btn_back.pressed.connect(func(): ScreenManager.return_to_hub(self))
 	
 	var margin = MarginContainer.new()
 	margin.add_theme_constant_override("margin_top", 20)
