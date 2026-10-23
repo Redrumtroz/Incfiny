@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bikgomhirmsu3"]
+
+[ext_resource type="Script" uid="uid://wrolx1y1xir0" path="res://PrototypeOrganique.gd" id="1_l87if"]
+
+[node name="PrototypeOrganique" type="Node2D" unique_id=1785853927]
+script = ExtResource("1_l87if")

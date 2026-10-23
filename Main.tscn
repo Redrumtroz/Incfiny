@@ -4,6 +4,10 @@
 [ext_resource type="Script" uid="uid://bb63cwhq2hp2m" path="res://Core/UI_Components/GenericToolbar.gd" id="1_uu6xs"]
 [ext_resource type="Script" uid="uid://bpjal4h3w1ou3" path="res://Core/UI_Components/GenericPopUp.gd" id="2_r0du0"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a336f"]
+bg_color = Color(0.29745835, 0.48660648, 0.77857506, 0.2509804)
+corner_detail = 20
+
 [node name="Main" type="Node2D" unique_id=1205134143]
 script = ExtResource("1_r0du0")
 
@@ -18,7 +22,7 @@ grow_vertical = 2
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=2122365614]
 
 [node name="GenericToolbar" type="PanelContainer" parent="UILayer" unique_id=1774533567]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(300, 80)
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -29,7 +33,22 @@ offset_top = -80.0
 offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_a336f")
 script = ExtResource("1_uu6xs")
+
+[node name="MarginContainer" type="MarginContainer" parent="UILayer/GenericToolbar" unique_id=1091559557]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UILayer/GenericToolbar/MarginContainer" unique_id=103626387]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UILayer/GenericToolbar/MarginContainer/ScrollContainer" unique_id=1592890545]
+layout_mode = 2
+theme_override_constants/separation = 5
 
 [node name="GenericPopUp" type="Control" parent="UILayer" unique_id=1562374701]
 layout_mode = 3

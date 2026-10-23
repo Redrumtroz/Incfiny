@@ -21,6 +21,7 @@ EconomyManager="*uid://bx3pn8agp7dvx"
 FarmManager="*uid://3whc53g1b5mt"
 MetaManager="*uid://b6l7eghmd705m"
 TooltipManager="*uid://cobqv8fpok3l3"
+InfluenceManager="*uid://cqsaehid82plo"
 
 [display]
 

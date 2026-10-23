@@ -9,22 +9,14 @@ var loaded_modules: Dictionary = {}
 var current_module: Control = null
 
 func _ready() -> void:
-	# 1. SÉCURITÉ : Forcer le conteneur du monde à prendre tout l'écran
+	# La taille du monde est gérée ici
 	world_container.set_anchors_preset(Control.PRESET_FULL_RECT)
 	world_container.size = get_viewport().get_visible_rect().size
 
-	# 2. Setup de la toolbar générique
-	toolbar.setup({
-		"placement": "bottom",
-		"bg_color": Color(0.15, 0.16, 0.18, 0.90),
-		"padding": 10,
-		"spacing": 10,
-		"scroll_size": 600
-	})
+	# PLUS BESOIN DE toolbar.setup({...}) ! 
+	# Tout l'aspect de la toolbar est maintenant géré par l'éditeur Godot.
 	
 	_setup_top_menu()
-	
-	# Lancement du module par défaut
 	open_module("res://Modules/CityBuilder/CityBuilder.tscn")
 
 func _setup_top_menu() -> void:

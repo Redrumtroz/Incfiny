@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://jf8i8m356pjx"]
+
+[ext_resource type="Script" uid="uid://fqwgns4yn40t" path="res://Modules/CityBuilder/CityBuilder.gd" id="1_u2s3q"]
+[ext_resource type="Script" uid="uid://cy4vvefkkkoae" path="res://Modules/CityBuilder/OrganicMap.gd" id="2_475ri"]
+[ext_resource type="Script" uid="uid://dtbgvs7r6mj3s" path="res://Modules/CityBuilder/CityUI.gd" id="3_10k35"]
+
+[node name="CityBuilder" type="Control" unique_id=1428670325]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u2s3q")
+
+[node name="MainVBox" type="VBoxContainer" parent="." unique_id=1828775298]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WorkspaceSplit" type="HSplitContainer" parent="MainVBox" unique_id=492204223]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LeftPanel" type="VBoxContainer" parent="MainVBox/WorkspaceSplit" unique_id=173082882]
+layout_mode = 2
+
+[node name="ResourceList" type="VBoxContainer" parent="MainVBox/WorkspaceSplit/LeftPanel" unique_id=1051665322]
+layout_mode = 2
+
+[node name="RightWorkspace" type="VBoxContainer" parent="MainVBox/WorkspaceSplit" unique_id=243854288]
+layout_mode = 2
+
+[node name="StatsPanel" type="PanelContainer" parent="MainVBox/WorkspaceSplit/RightWorkspace" unique_id=2017111439]
+layout_mode = 2
+
+[node name="PopLabel" type="Label" parent="MainVBox/WorkspaceSplit/RightWorkspace/StatsPanel" unique_id=331266484]
+layout_mode = 2
+
+[node name="BldLabel" type="Label" parent="MainVBox/WorkspaceSplit/RightWorkspace/StatsPanel" unique_id=557655288]
+layout_mode = 2
+
+[node name="CityMap" type="Panel" parent="MainVBox/WorkspaceSplit/RightWorkspace" unique_id=432701159]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_475ri")
+
+[node name="CityUI" type="Node" parent="." unique_id=1180189743]
+script = ExtResource("3_10k35")

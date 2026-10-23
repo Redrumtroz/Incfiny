@@ -1,51 +1,37 @@
 {
-  "lumberjack": {
-	"name": "Camp de Bûcheron",
-	"description": "Coupe du bois automatiquement.",
-	"base_cost": { "MAT_WOOD": 50.0, "MAT_STONE": 10.0 },
-	"cost_mult": 1.15,
-	"production": { "MAT_WOOD": 2.0 },
-	"ui": { "color": "#8a6b4e", "icon": "🪓", "size": [60, 60] }
+  "bld_park": {
+	"name": "Parc Naturel",
+	"description": "Génère de la Nature.",
+	"base_cost": { "RES_GOLD": 10 },
+	"production": { "MAT_WOOD": 0.5 },
+	"ui": { "icon": "🌳" }
   },
-  "quarry": {
-	"name": "Fosse de Bâtisseur",
-	"description": "Extrait de la pierre des profondeurs.",
-	"base_cost": { "MAT_WOOD": 50.0, "MAT_STONE": 10.0 },
-	"cost_mult": 1.15,
-	"production": { "MAT_STONE": 2.0 },
-	"ui": { "color": "#a1a3a4", "icon": "⛏️", "size": [70, 70] }
+  "bld_barracks": {
+	"name": "Caserne",
+	"description": "Quartier Militaire.",
+	"base_cost": { "RES_GOLD": 50, "MAT_WOOD": 20 },
+	"production": { "RES_SECURITY": 1.0 },
+	"ui": { "icon": "⚔️" }
   },
-  "sawmill": {
-	"name": "Scierie",
-	"description": "Transforme le bois brut en planches.",
-	"base_cost": { "MAT_WOOD": 200.0, "MAT_STONE": 30.0 },
-	"cost_mult": 1.2,
-	"production": { "MAT_PLANK": 1.0 },
-	"consumption": { "MAT_WOOD": 5.0 },
-	"ui": { "color": "#997161", "icon": "⚙️", "size": [80, 60] }
+  "bld_market": {
+	"name": "Marché",
+	"description": "Quartier Commercial.",
+	"base_cost": { "MAT_WOOD": 30 },
+	"production": { "RES_GOLD": 2.0 },
+	"ui": { "icon": "⚖️" }
   },
-  "tavern": {
-	"name": "La Taverne",
-	"description": "Débloque l'onglet RPG et attire des Héros.",
-	"base_cost": { "MAT_PLANK": 200.0, "MAT_CEMENT": 100.0 },
-	"cost_mult": 1.5,
-	"production": {},
-	"ui": { "color": "#b48a78", "icon": "🍺", "size": [90, 80] }
+  "bld_mine": {
+	"name": "Mine de Pierre",
+	"description": "Quartier Industriel.",
+	"base_cost": { "RES_GOLD": 25 },
+	"production": { "MAT_STONE": 1.5 },
+	"ui": { "icon": "⛏️" }
   },
-  "well": {
-	"name": "Puits",
-	"description": "Puise de l'eau claire des nappes souterraines.",
-	"base_cost": { "MAT_STONE": 50.0 },
-	"cost_mult": 1.1,
-	"production": { "MAT_WATER": 1.0 },
-	"ui": { "color": "#3b82f6", "icon": "💧", "size": [50, 50] }
-  },
-  "gold_mine": {
-	"name": "Mine d'Or",
-	"description": "Extrait le précieux métal pour financer la ville.",
-	"base_cost": { "MAT_WOOD": 200.0, "MAT_STONE": 300.0 },
-	"cost_mult": 1.4,
-	"production": { "RES_GOLD": 3.0 },
-	"ui": { "color": "#d4af37", "icon": "💰", "size": [75, 75] }
+  "bld_tavern": {
+	"name": "Taverne",
+	"description": "Quartier Divertissement.",
+	"base_cost": { "MAT_WOOD": 40, "MAT_STONE": 10 },
+	"production": { "RES_HAPPINESS": 1.0 },
+	"ui": { "icon": "🍺" }
   }
 }
